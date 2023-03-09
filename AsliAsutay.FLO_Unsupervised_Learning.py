@@ -1,5 +1,4 @@
-# Görev 1:  Veriyi Hazırlama
-# Adım1:  flo_data_20K.csv verisiniokutunuz
+
 
 import numpy as np
 import pandas as pd
@@ -25,9 +24,6 @@ df = df_.copy()
 df.head()
 df.describe().T
 
-
-# aykırı değer olabilir
-
 def check_df(dataframe, head=5):
     print("##################### Shape #####################")
     print(dataframe.shape)
@@ -45,8 +41,6 @@ def check_df(dataframe, head=5):
 
 check_df(df)
 
-
-# NA değeri yok, zamanı gösteren özelliklerin tipi değişmeli
 
 def grab_col_names(dataframe, cat_th=10, car_th=20):
     # cat_cols, cat_but_car
@@ -109,13 +103,6 @@ for col in num_cols:
 for col in num_cols:
     print(col, check_outlier(df, col))
 
-# Adım2:  Müşterilerisegmentlerkenkullanacağınızdeğişkenleriseçiniz
-# Not: Tenure (Müşterininyaşı), Recency (enson kaçgünöncealışverişyaptığı) gibiyeni değişkenleroluşturabilirsiniz
-
-# date_columns = df.columns[df.columns.str.contains("date")]
-# df[date_columns] = df[date_columns].apply(pd.to_datetime)
-
-# Her bir müşterinin toplam alışveriş sayısı ve harcaması
 df["TotalOrder"] = df["order_num_total_ever_online"] + df["order_num_total_ever_offline"]
 df["TotalPrice"] = df["customer_value_total_ever_offline"] + df["customer_value_total_ever_online"]
 
@@ -130,8 +117,6 @@ df["Tenure"] = today_date - pd.to_datetime(df["first_order_date"])
 
 df.head()
 
-# Görev 2:  K-Means ileMüşteriSegmentasyonu
-# Adım 1: Değişkenleristandartlaştırınız
 
 cat_cols = [col for col in df.columns if df[col].dtypes not in ["int", "int64", "float64"]]
 
@@ -147,7 +132,6 @@ sc = MinMaxScaler((0, 1))
 df = sc.fit_transform(df)
 df[0:5]
 
-# Adım 2: Optimum kümesayısınıbelirleyiniz.
 
 kmeans = KMeans(n_clusters=4, random_state=17).fit(df)
 kmeans.get_params()
@@ -176,9 +160,7 @@ elbow.fit(df)
 elbow.show()
 
 elbow.elbow_value_
-#7
 
-# Adım 3: Modelinizi oluşturunuz ve müşterilerinizi segmentleyiniz.
 
 kmeans = KMeans(n_clusters=elbow.elbow_value_).fit(df)
 
@@ -191,12 +173,8 @@ kmeans_final["CLUSTER"] = clusters_kmeans
 kmeans_final["CLUSTER"] = kmeans_final["CLUSTER"] + 1
 kmeans_final.head()
 
-# Adım 4: Her bir segmenti istatistiksel olarak inceleyeniz.
 
 kmeans_final.groupby("CLUSTER").agg(["count", "mean", "median"])
-
-# Görev 3: Hierarchical Clustering ile Müşteri Segmentasyonu
-# Adım 1: Görev2'de standırlaştırdığınız dataframe'i kullanarak optimum küme sayısını belirleyiniz
 
 sc = MinMaxScaler((0, 1))
 df = sc.fit_transform(df)
@@ -219,7 +197,6 @@ plt.axhline(y=0.5, color='r', linestyle='--')
 plt.axhline(y=0.6, color='b', linestyle='--')
 plt.show()
 
-#Adım 2: Modelinizi oluşturunuz vemüşterilerinizsegmentleyiniz.
 
 
 cluster = AgglomerativeClustering(n_clusters=4, linkage="average")
@@ -232,6 +209,5 @@ df["CLUSTER_HI"] = df["CLUSTER_HI"] + 1
 
 df.head()
 
-# Adım 3: Her bir segmenti istatistiksel olarak inceleyeniz.
 
 df.groupby("CLUSTER_HI").agg(["count", "mean", "median"])
