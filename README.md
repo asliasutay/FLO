@@ -1,2 +1,2 @@
-# FLO
+# FLO - Unspervised Learning
 The code reads a csv file named "flo_data_20K.csv" and creates a pandas dataframe named "df". It then defines some functions to check the dataframe and handle outliers. Later, it creates some new variables by using the existing variables in the dataframe such as total order, total price, recency, frequency, monetory, and tenure. Finally, it prepares the categorical variables for k-means clustering by one-hot encoding them. However, it does not apply standardization before k-means clustering.
